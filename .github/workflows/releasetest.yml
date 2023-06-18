@@ -19,6 +19,8 @@ jobs:
           version=$(date -u "+%Y.%m.%d-alpha%H%M")
           echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
           echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo "Ref name from GITHUB_REF: $GITHUB_REF"
+          echo "Ref name from github.ref: ${{  github.ref }}"
           echo "version=$version" >> "$GITHUB_ENV"
           curl -s https://api.github.com/repos/${{ env.actionpath }}/jobs
       - name: Set release version
