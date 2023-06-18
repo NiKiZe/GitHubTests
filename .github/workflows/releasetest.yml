@@ -1,0 +1,28 @@
+name: .NET
+
+on: push
+
+env:
+  Config: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup env
+        id: setupenv
+      # TODO Version depending on prerelease, use alpha otherwise
+        run: |
+          vdate=$(date -u "+%Y%m%d%H%M")
+          version=0.0.5-alpha$vdate
+          echo "version=$version" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v3
+
+      - name: Write to Job Summary
+        if: success() || failure()
+        run: echo "#WiHiiii" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Release test ${{ vars.GITHUB_REPOSITORY_OWNER }}
+        run: |s
+          exho $GITHUB_REPOSITORY_OWNER
+          ls -lha
