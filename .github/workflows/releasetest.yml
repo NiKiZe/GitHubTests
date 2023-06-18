@@ -56,6 +56,6 @@ jobs:
         run: echo "#WiHiiii" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Release test ${{ vars.GITHUB_REPOSITORY_OWNER }}
-        run: |s
+        run: |
           exho $GITHUB_REPOSITORY_OWNER
           ls -lha
