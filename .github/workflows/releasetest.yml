@@ -1,7 +1,9 @@
 name: .NET
 
-on: push
-
+on:
+  push:
+  release:
+  
 env:
   Config: Release
 
@@ -11,7 +13,7 @@ jobs:
     env:
       actionpath: ${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
-      - name: Setup env
+      - name: Setup env ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} ref ${{ github.ref }}
         id: setupenv
         run: |
           version=$(date -u "+%Y.%m.%d-alpha%H%M")
@@ -56,7 +58,7 @@ jobs:
         if: success() || failure()
         run: echo "#WiHiiii" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Release test ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }}
+      - name: Release test ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} ref ${{ github.ref }}
         run: |
-          echo $GITHUB_REPOSITORY_OWNER
+          echo Repo owner> $GITHUB_REPOSITORY_OWNER
           ls -lha
