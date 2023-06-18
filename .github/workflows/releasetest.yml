@@ -57,5 +57,5 @@ jobs:
 
       - name: Release test ${{ vars.GITHUB_REPOSITORY_OWNER }}
         run: |
-          exho $GITHUB_REPOSITORY_OWNER
+          echo $GITHUB_REPOSITORY_OWNER
           ls -lha
