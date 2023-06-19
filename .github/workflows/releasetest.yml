@@ -16,22 +16,21 @@ jobs:
       - name: Setup env ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} action  ${{ github.event.action }} ref ${{ github.ref }}
         id: setupenv
         run: |
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{ github.ref_name }}"
-          echo "Ref name from GITHUB_REF: $GITHUB_REF"
-          echo "Ref name from github.ref: ${{ github.ref }}"
-          echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-          echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-          echo "The run id is: $GITHUB_RUN_ID"
-          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+          echo "Tag name from github.ref_name: ${{ github.ref_name }} env $GITHUB_REF_NAME"
+          echo "Ref name from github.ref: ${{ github.ref }} env $GITHUB_REF"
+          echo "The job_id is: ${{ github.job }} $GITHUB_JOB"
+          echo "The id of this action is: $GITHUB_ACTION"
+          echo "The run id is: ${{ github.run_id }}"
+          echo "The GitHub Actor's username is: ${{ github.actor }}"
           echo "GitHub SHA: ${{ github.sha }} env: $GITHUB_SHA"
           version=$(date -u "+%Y.%m.%d-alpha%H%M")
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-8)
           if [[ ${{ github.ref }} =~ ^refs/tags/v([0-9][0-9][0-9][0-9]\.[0-9]+\.[0-9]+)$ ]]; then
               # override alpha version
               if [[ ${{ github.event_name }} == release ]]; then
                   version=${BASH_REMATCH[1]}
               else
-                  version=${BASH_REMATCH[1]}-beta${{ github.sha }}
+                  version=${BASH_REMATCH[1]}-beta$SHORT_SHA
               fi
           fi
           echo got version $version
