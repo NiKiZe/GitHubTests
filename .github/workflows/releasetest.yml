@@ -24,25 +24,25 @@ jobs:
           echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
           echo "The run id is: $GITHUB_RUN_ID"
           echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-          echo "GitHub SHA: $GITHUB_SHA"
+          echo "GitHub SHA: ${{ github.sha }} env: $GITHUB_SHA"
           version=$(date -u "+%Y.%m.%d-alpha%H%M")
           if [[ ${{ github.ref }} =~ ^refs/tags/v([0-9][0-9][0-9][0-9]\.[0-9]+\.[0-9]+)$ ]]; then
               # override alpha version
               if [[ ${{ github.event_name }} == release ]]; then
                   version=${BASH_REMATCH[1]}
               else
-                  version=${BASH_REMATCH[1]}-beta$(date -u "+%Y%m%d%H%M")
+                  version=${BASH_REMATCH[1]}-beta${{ github.sha }}
               fi
-              echo "match=true ${{ github.ref }}"
           fi
-          echo "early ${{ env.version }} $version" >> "$GITHUB_STEP_SUMMARY"
+          echo got version $version
+          echo "early summary version ${{ env.version }} $version" >> "$GITHUB_STEP_SUMMARY"
           echo "version=$version" >> "$GITHUB_ENV"
           curl -s https://api.github.com/repos/${{ env.actionpath }}/jobs
       - name: Set release version
         if: startsWith(github.ref, 'refs/tags/v') && github.event.release.published
         run: |
-          version=$GITHUB_REF_NAME
-          echo "version=$version" >> "$GITHUB_ENV"
+          relversion=$GITHUB_REF_NAME
+          echo "relversion=$relversion" >> "$GITHUB_ENV"
           
       - uses: actions/checkout@v3
 
