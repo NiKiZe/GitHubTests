@@ -74,7 +74,7 @@ jobs:
         run: |
 
 
-      - name: Write to Job Summary
+      - name: Write to Job Summary ver ${{ env.version }}
         if: success() || failure()
         run: echo "#WiHiiii" >> "$GITHUB_STEP_SUMMARY"
 
