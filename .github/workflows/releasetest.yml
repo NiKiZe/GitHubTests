@@ -13,7 +13,7 @@ jobs:
     env:
       actionpath: ${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
-      - name: Setup env ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} action  ${{ github.event.action }} ref ${{ github.ref }}
+      - name: Setup env ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} action  ${{ github.event.action }} ref ${{ github.ref }} ver ${{ env.version }}
         id: setupenv
         run: |
           echo "Tag name from github.ref_name: ${{ github.ref_name }} env $GITHUB_REF_NAME"
