@@ -16,11 +16,26 @@ jobs:
       - name: Setup env ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} action  ${{ github.event.action }} ref ${{ github.ref }}
         id: setupenv
         run: |
-          version=$(date -u "+%Y.%m.%d-alpha%H%M")
           echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo "Tag name from github.ref_name: ${{ github.ref_name }}"
           echo "Ref name from GITHUB_REF: $GITHUB_REF"
-          echo "Ref name from github.ref: ${{  github.ref }}"
+          echo "Ref name from github.ref: ${{ github.ref }}"
+          echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
+          echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
+          echo "The run id is: $GITHUB_RUN_ID"
+          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+          echo "GitHub SHA: $GITHUB_SHA"
+          version=$(date -u "+%Y.%m.%d-alpha%H%M")
+          if [[ ${{ github.ref }} =~ ^refs/tags/v([0-9][0-9][0-9][0-9]\.[0-9]+\.[0-9]+)$ ]]; then
+              # override alpha version
+              if [[ ${{ github.event_name }} == release ]]; then
+                  version=${BASH_REMATCH[1]}
+              else
+                  version=${BASH_REMATCH[1]}-beta$(date -u "+%Y%m%d%H%M")
+              fi
+              echo "match=true ${{ github.ref }}"
+          fi
+          echo "early ${{ env.version }} $version" >> "$GITHUB_STEP_SUMMARY"
           echo "version=$version" >> "$GITHUB_ENV"
           curl -s https://api.github.com/repos/${{ env.actionpath }}/jobs
       - name: Set release version
@@ -58,11 +73,7 @@ jobs:
 
       - name: Show default environment variables
         run: |
-          echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-          echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-          echo "The run id is: $GITHUB_RUN_ID"
-          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-          echo "GitHub SHA: $GITHUB_SHA"
+
 
       - name: Write to Job Summary
         if: success() || failure()
@@ -70,5 +81,5 @@ jobs:
 
       - name: Release test ${{ vars.GITHUB_REPOSITORY_OWNER }} event ${{ github.event_name }} action  ${{ github.action }} ref ${{ github.ref }}
         run: |
-          echo Repo owner> $GITHUB_REPOSITORY_OWNER
+          echo Repo owner x $GITHUB_REPOSITORY_OWNER x ${{ vars.GITHUB_REPOSITORY_OWNER }} x
           ls -lha
